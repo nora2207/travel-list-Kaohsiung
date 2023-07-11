@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-tw">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>高雄旅遊景點</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+
+</head>
+<body>
+  <div id="app" class="mt-2 container p-4">
+    <h1 class="text-center mb-4">高雄旅遊景點</h1>
+    <div class="row h-100">
+      <!-- 左邊區塊 -->
+      <div class="col-md-3 h-100 d-flex flex-column">
+        <!-- 左方搜尋區 -->
+        <div class="form-floating mb-2">
+          <input type="text" class="form-control" id="search" placeholder="search" v-model="cacheSearch">
+          <label for="search">search</label>
+        </div>
+        <!-- 左邊列表 -->
+        <div class="list-group option">
+          <label class="list-group-item" v-for="(item,key) in fliterSearch" :key="item.Name">
+            <input class="form-check-input me-1" type="radio" name="area" @click="selectPlace(item)" :value="item" :checked="cacheArea.Name === item.Name">
+  <!-- radio 按鈕透過 checked 來指示以勾選或是不確定狀態，當滿足 cacheArea.Name === item.Name 就會套用 checked 樣式 -->
+           {{ item.Name }}
+          </label>
+        </div>
+      </div>
+      <!-- 右邊區塊 -->
+      <div class="col-md-8 h-100 d-flex flex-column">
+        <!-- 右方瀏覽紀錄 -->
+        <div class="form-floating">
+          <select  id="cacheArea" class="form-select w-50 mb-2" aria-label="select example" v-model="cacheArea">
+            <option selected value="" disabled>瀏覽紀錄</option>
+            <option  v-for="(item,key) in browseLog" :key="'browseLog' + key" :value="item">{{ key +1 }}.{{ item.Name }}</option>
+          </select>
+          <label for="cacheArea">瀏覽紀錄</label>
+        </div>
+        <!-- 右方景點介紹 -->
+        <div class="card overflow-auto" v-if="cacheArea.Name">
+          <img :src="cacheArea.Picture1" class="card-img-top mb-2" :alt="cacheArea.Name">
+          <iframe width="100%" height="300" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" :src=`https://maps.google.com.tw/maps?f=q&hl=zh-TW&geocode=&q=${cacheArea.Py},${cacheArea.Px}(${cacheArea.Name})&z=16&output=embed`></iframe>
+          <div class="card-body">
+            <h5 class="card-title">{{ cacheArea.Name }}</h5>
+            <p>{{ cacheArea.Description }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.2/axios.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.2.37/vue.global.prod.min.js"></script>
+  <script src="all.js"></script>
+</body>
+</html>
